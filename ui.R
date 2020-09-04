@@ -10,7 +10,8 @@ shinyUI(
         ),
       selectizeInput(inputId = 'player', 
                      label = 'Player',
-                     choices = unique(box_scores$playDispNm[order(box_scores$playLNm)])),
+                     choices = unique(box_scores$playDispNm[order(box_scores$playLNm)]),
+                     selected = 'LeBron James'),
       selectizeInput(inputId = 'stat',
                      label = 'Statistic',
                      choices = colnames(box_scores)[20:45][-2])

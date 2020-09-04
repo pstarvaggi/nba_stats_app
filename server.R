@@ -4,9 +4,7 @@ shinyServer(
   function(input,output){
     output$hist <- renderGvis({ 
       gvisHistogram(
-        select(
-          box_scores[box_scores$playDispNm == input$player],
-          input$stat), 
+          as.data.frame(box_scores[box_scores$playDispNm == input$player, input$stat]), 
                     options = list(width = 'auto', height = 'auto'))
     })
     # show histogram using googleVis
