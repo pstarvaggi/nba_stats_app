@@ -14,16 +14,17 @@ shinyUI(
                      selected = 'LeBron James'),
       selectizeInput(inputId = 'stat',
                      label = 'Statistic',
-                     choices = colnames(box_scores)[20:45][-2])
+                     choices = colnames(box_scores)[20:45][-1*2:5],
+                     selected = 'playPTS')
     ),
     dashboardBody(
       tabItems(
         tabItem(tabName = "map",
-                fluidRow(infoBoxOutput('maxBox'),
-                         infoBoxOutput('minBox'),
-                         infoBoxOutput('avgBox')),
+                fluidRow(infoBoxOutput('maxBox', width = 'auto'),
+                         infoBoxOutput('avgBox', width = 'auto')),
                 fluidRow(box(htmlOutput('hist'),
-                             height = 300))),
+                             width = 'auto',
+                             height = 'auto'))),
         tabItem(tabName = "data",
                 fluidRow(box(DT::dataTableOutput('table'),
                              width = 12)))

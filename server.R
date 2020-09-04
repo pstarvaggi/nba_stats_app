@@ -19,22 +19,17 @@ shinyServer(
     })
     
     output$maxBox <- renderInfoBox({
-      max_value <- max(state_stat[,input$selected]) 
-      max_state <-
-        state_stat$state.name[state_stat[,input$selected]==max_value] 
-      infoBox(max_state, max_value, icon = icon("hand-o-up"))
+      max_value <- max(box_scores[,input$stat]) 
+      max_player <-
+        box_scores$playDispNm[box_scores[,input$stat]==max_value]
+      if (length(max_player) > 1){max_player = 'Multiple Players'}
+      infoBox(paste(max_player, 'has most single game', input$stat), 
+              max_value, icon = icon("hand-o-up"))
     })
-    
-    output$minBox <- renderInfoBox({
-      min_value <- min(state_stat[,input$selected]) 
-      min_state <-
-        state_stat$state.name[state_stat[,input$selected]==min_value] 
-      infoBox(min_state, min_value, icon = icon("hand-o-down"))
-    })
-    
+
     output$avgBox <- renderInfoBox(
-      infoBox(paste("AVG.", input$selected), 
-              mean(state_stat[,input$selected]),
+      infoBox(paste(input$player, "AVG.", input$stat), 
+              round(mean(box_scores[box_scores$playDispNm == input$player,][,input$stat])),
               icon = icon("calculator"), fill = TRUE))
   }
 )
