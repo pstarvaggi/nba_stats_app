@@ -4,8 +4,11 @@ shinyServer(
 
     output$hist <- renderGvis({ 
       gvisHistogram(
-          as.data.frame(box_scores[box_scores$playDispNm == input$player,][, stats[stats$statistic == input$stat,1]]), 
-                    options = list(width = 'auto', height = 'auto'))
+          data.frame(box_scores[box_scores$playDispNm == input$player,]
+                     [, stats[stats$statistic == input$stat,1]]), 
+                    options = list(width = 'auto', height = 500,
+                                   legend = 'none',
+                                   hAxis=paste0("{title:'",input$stat,"'}")))
     })
     
     output$table <- DT::renderDataTable({
@@ -34,13 +37,39 @@ shinyServer(
               max_value, icon = icon("hand-o-up"))
     })
 
-    output$avgBox <- renderInfoBox(
-      infoBox(paste(input$player, "AVG.", input$stat), 
+    output$avgBox <- renderInfoBox({
+      infoBox(paste(input$player, "average", input$stat, 'per game'), 
               signif(mean(box_scores[
                 box_scores$playDispNm == input$player,
-                stats[stats$statistic == input$stat,1]
-                ]), 
+                stats[stats$statistic == input$stat,1]]), 
                 digits = 3),
-              icon = icon("calculator"), fill = TRUE))
+              icon = icon("calculator"), fill = TRUE)
+    })
+    
+    
+    output$scatter <- renderGvis({
+      gvisScatterChart(data.frame(
+        box_scores[
+          box_scores$playDispNm == input$player,
+          stats[stats$statistic == input$stat,1]], 
+        box_scores[
+          box_scores$playDispNm == input$player,
+          stats[stats$statistic == input$stat2,1]]),
+        options=list(
+          title=paste(input$stat, 'vs', input$stat2),
+          legend="none",
+          pointSize=3,
+          curveType = 'function',
+          height = 500,
+          hAxis=paste0("{title:'",input$stat,"'}"),
+          vAxis=paste0("{title:'",input$stat2,"'}")))
+    })
+    
+    
+    
+    
+    
+    
+    
   }
 )

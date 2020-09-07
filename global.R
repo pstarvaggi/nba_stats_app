@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 library(DT)
 library(googleVis)
+library(magrittr)
 
 box_scores = read.csv('NBA_Enhanced_Box_Score_and_Standings/2012-18_playerBoxScore.csv')
 
@@ -33,5 +34,5 @@ stats %<>% data.frame(stat = stats, statistic = c('Minutes',
                                                   'Rebounds')) %>%
   .[-1]
 
-
+nba_logo = img(src('nbalogo.jpg'))
 
