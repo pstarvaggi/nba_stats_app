@@ -1,4 +1,4 @@
-library(shinydashboard)
+
 
 shinyUI(
   dashboardPage(
@@ -7,7 +7,8 @@ shinyUI(
     dashboardSidebar(
       sidebarMenu(
         menuItem("Univariate", tabName = "univariate", icon = icon("bar-chart-o")), 
-        menuItem("Bivariate", tabName = "bivariate", icon = icon('basketball-ball')), 
+        menuItem("Bivariate", tabName = "bivariate", icon = icon('basketball-ball')),
+        menuItem("By Official", tabName = "official", icon = icon('asterisk')),
         menuItem("Data", tabName = "data", icon = icon("database"))
         ),
       selectizeInput(inputId = 'player', 
@@ -31,10 +32,24 @@ shinyUI(
                 selectizeInput(inputId = 'stat2',
                                label = 'y-Axis Statistic',
                                choices = stats$statistic,
-                               selected = 'Points'),
+                               selected = 'Assists'),
+                fluidRow(infoBoxOutput('maxBox2', width = 6),
+                         infoBoxOutput('maxBox3', width = 6)),
                 fluidRow(box(htmlOutput('scatter'),
-                             width = 12,
-                             height = 300))),
+                             width = 'auto',
+                             height = 'auto'))),
+        tabItem(tabName = "official",
+                selectizeInput(inputId = 'ref',
+                               label = 'y-Axis Statistic',
+                               choices = officials,
+                               selected = 'Tony Brothers'),
+                fluidRow(box(htmlOutput('byref'),
+                             width = 'auto',
+                             height = 'auto')),
+                fluidRow(box(htmlOutput('hist2'),
+                             width = 'auto',
+                             height = 'auto'))
+                ),
         tabItem(tabName = "data",
                 fluidRow(box(DT::dataTableOutput('table'),
                              width = 12)))
