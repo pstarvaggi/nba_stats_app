@@ -12,6 +12,33 @@ shinyServer(
                                    vAxis = "{title: 'Number of Games'}"))
     })
     
+    output$hist2 <- renderGvis({ 
+      x_max = max(box_scores[box_scores$playDispNm == input$player,]
+                  [, stats[stats$statistic == input$stat,1]])
+      gvisHistogram(
+        data.frame(box_scores[box_scores$playDispNm == input$player,]
+                   [, stats[stats$statistic == input$stat,1]]), 
+        options = list(title = 'All Games',
+                       width = 'auto', height = 250,
+                       legend = 'none',
+                       hAxis = paste0("{title:'",input$stat,"',
+                                      viewWindowMode: 'explicit', 
+                                      viewWindow: {min: 0, max:",x_max,"}}"),
+                       vAxis = "{title: 'Number of Games'}"))
+    })
+    
+    output$hist3 <- renderGvis({ 
+      gvisHistogram(
+        data.frame(box_scores[box_scores$playDispNm == input$player
+                              & box_scores$gmDate >= input$daterange[1]
+                              & box_scores$gmDate <= input$daterange[2],]
+                   [, stats[stats$statistic == input$stat,1]]), 
+        options = list(width = 'auto', height = 500,
+                       legend = 'none',
+                       hAxis = paste0("{title:'",input$stat,"'}"),
+                       vAxis = "{title: 'Number of Games'}"))
+    })
+    
     output$table <- DT::renderDataTable({
     datatable(box_scores[box_scores$playDispNm == input$player,
                          if(stats[stats$statistic == input$stat,1] %in%
@@ -45,8 +72,19 @@ shinyServer(
     })
     
     output$maxBox3 <- renderInfoBox({
-      max_value <- max(box_scores[box_scores$playDispNm == input$player,stats[stats$statistic == input$stat2,1]]) 
+      max_value <- max(box_scores[box_scores$playDispNm == input$player,
+                                  stats[stats$statistic == input$stat2,1]]) 
       infoBox(paste(input$player, 'max', input$stat2), 
+              max_value, icon = icon("hand-o-up"))
+    })
+    
+    
+    output$maxBox4 <- renderInfoBox({
+      max_value <- max(box_scores[box_scores$playDispNm == input$player
+                                  & box_scores$gmDate >= input$daterange[1]
+                                  & box_scores$gmDate <= input$daterange[2]
+                                  ,stats[stats$statistic == input$stat,1]]) 
+      infoBox(paste(input$player, 'max in date range', input$stat), 
               max_value, icon = icon("hand-o-up"))
     })
 
@@ -54,6 +92,17 @@ shinyServer(
       infoBox(paste(input$player, "average", input$stat, 'per game'), 
               signif(mean(box_scores[
                 box_scores$playDispNm == input$player,
+                stats[stats$statistic == input$stat,1]]), 
+                digits = 3),
+              icon = icon("calculator"), fill = TRUE)
+    })
+    
+    output$avgBox2 <- renderInfoBox({
+      infoBox(paste(input$player, "average", input$stat, 'in date range per game'), 
+              signif(mean(box_scores[
+                box_scores$playDispNm == input$player
+                & box_scores$gmDate >= input$daterange[1]
+                & box_scores$gmDate <= input$daterange[2],
                 stats[stats$statistic == input$stat,1]]), 
                 digits = 3),
               icon = icon("calculator"), fill = TRUE)
@@ -91,25 +140,31 @@ shinyServer(
                                    paste(box_scores$offFNm3,box_scores$offLNm3)
                                  == input$ref),][, stats[stats$statistic ==
                                                            input$stat,1]]),
-        options = list(width = 1000, height = 250,
+        options = list(title=paste('Games With', input$ref, 'as an Official'),
+                       width = 'auto', height = 250,
                        legend = 'none',
                        hAxis = paste0("{title:'",input$stat,"',
-                                      minValue: 0, maxValue:",x_max,"}"),
+                                      viewWindowMode: 'explicit', 
+                                      viewWindow: {min: 0, max:",x_max,"}}"),
                        vAxis = "{title: 'Number of Games'}"))
     })
     
-    output$hist2 <- renderGvis({ 
-      x_max = max(box_scores[box_scores$playDispNm == input$player,]
-                  [, stats[stats$statistic == input$stat,1]])
-      gvisHistogram(
-        data.frame(box_scores[box_scores$playDispNm == input$player,]
-                   [, stats[stats$statistic == input$stat,1]]), 
-        options = list(width = 1000, height = 250,
-                       legend = 'none',
-                       hAxis = paste0("{title:'",input$stat,"',
-                                      minValue: 0, maxValue:",x_max,"}"),
-                       vAxis = "{title: 'Number of Games'}"))
-    })
     
+    output$line <- renderGvis({ 
+      gvisLineChart(
+        data.frame(box_scores[box_scores$playDispNm == input$player
+                              & box_scores$gmDate >= input$daterange[1]
+                              & box_scores$gmDate <= input$daterange[2],]
+                          [,'gmDate'],
+        box_scores[box_scores$playDispNm == input$player
+                   & box_scores$gmDate >= input$daterange[1]
+                   & box_scores$gmDate <= input$daterange[2],]
+                          [, stats[stats$statistic == input$stat,1]]),
+        options = list(title = 'All Games',
+                       width = 'auto', height = 250,
+                       legend = 'none',
+                       hAxis = paste0("{title:'",input$stat,"'}"),
+                       vAxis = "{title: 'Number of Games'}"))
+    })   
   }
 )
