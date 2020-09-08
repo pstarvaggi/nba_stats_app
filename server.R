@@ -108,6 +108,55 @@ shinyServer(
               icon = icon("calculator"), fill = TRUE)
     })
     
+    output$avgBox3 <- renderInfoBox({
+      infoBox(paste("Mean", input$stat, 'with',
+                    input$ref), 
+              signif(mean(box_scores[
+                box_scores$playDispNm == input$player & 
+                  (paste(box_scores$offFNm1,box_scores$offLNm1)
+                   == input$ref | 
+                     paste(box_scores$offFNm2,box_scores$offLNm2)
+                   == input$ref | 
+                     paste(box_scores$offFNm3,box_scores$offLNm3)
+                   == input$ref),
+                stats[stats$statistic == input$stat,1]]), 
+                digits = 3),
+              icon = icon("calculator"), fill = TRUE)
+    })
+    
+    output$avgBox4 <- renderInfoBox({
+      infoBox(paste("Overall mean", input$stat), 
+              signif(mean(box_scores[
+                box_scores$playDispNm == input$player,
+                stats[stats$statistic == input$stat,1]]), 
+                digits = 3),
+              icon = icon("calculator"), fill = TRUE)
+    })
+    
+    output$medBox1 <- renderInfoBox({
+      infoBox(paste("Median", input$stat, 'with',
+                    input$ref), 
+              signif(median(box_scores[
+                box_scores$playDispNm == input$player & 
+                  (paste(box_scores$offFNm1,box_scores$offLNm1)
+                   == input$ref | 
+                     paste(box_scores$offFNm2,box_scores$offLNm2)
+                   == input$ref | 
+                     paste(box_scores$offFNm3,box_scores$offLNm3)
+                   == input$ref),
+                stats[stats$statistic == input$stat,1]]), 
+                digits = 3),
+              icon = icon("calculator"), fill = TRUE)
+    })
+    
+    output$medBox2 <- renderInfoBox({
+      infoBox(paste("Overall median", input$stat), 
+              signif(median(box_scores[
+                box_scores$playDispNm == input$player,
+                stats[stats$statistic == input$stat,1]]), 
+                digits = 3),
+              icon = icon("calculator"), fill = TRUE)
+    })
     
     output$scatter <- renderGvis({
       gvisScatterChart(data.frame(

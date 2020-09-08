@@ -49,7 +49,11 @@ shinyUI(
                              height = 'auto')),
                 fluidRow(box(htmlOutput('hist2'),
                              width = 'auto',
-                             height = 'auto'))
+                             height = 'auto')),
+                fluidRow(infoBoxOutput('avgBox3', width = 6),
+                         infoBoxOutput('avgBox4', width = 6)),
+                fluidRow(infoBoxOutput('medBox1', width = 6),
+                         infoBoxOutput('medBox2', width = 6))
                 ),
         tabItem(tabName = "bydate",
                 dateRangeInput("daterange", "Date range:",
@@ -57,7 +61,8 @@ shinyUI(
                                end    = "2018-04-11",
                                min    = "2012-10-30",
                                max    = "2018-04-11",
-                               separator = "to"),
+                               separator = "to",
+                               startview = 'year'),
                 fluidRow(infoBoxOutput('maxBox4', width = 'auto'),
                          infoBoxOutput('avgBox2', width = 'auto')),
                 fluidRow(box(htmlOutput('line'),
