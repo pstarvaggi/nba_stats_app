@@ -33,25 +33,39 @@ shinyServer(
                               & box_scores$gmDate >= input$daterange[1]
                               & box_scores$gmDate <= input$daterange[2],]
                    [, stats[stats$statistic == input$stat,1]]), 
-        options = list(width = 'auto', height = 500,
+        options = list(title = paste('Games between', input$daterange[1],
+                                     'and', input$daterange[2]),
+                       width = 'auto', height = 500,
                        legend = 'none',
                        hAxis = paste0("{title:'",input$stat,"'}"),
                        vAxis = "{title: 'Number of Games'}"))
     })
     
     output$table <- DT::renderDataTable({
-    datatable(box_scores[box_scores$playDispNm == input$player,
-                         if(stats[stats$statistic == input$stat,1] %in%
-                         c('gmDate', 'playPTS', 'playTRB', 
+    
+    x <- box_scores[box_scores$playDispNm == input$player,
+                    if(stats[stats$statistic == input$stat,1] %in%
+                       c('gmDate', 'playPTS', 'playTRB', 
                          'playAST','playBLK','playSTL')){
-                           c('gmDate', 'playPTS', 'playTRB', 
-                             'playAST','playBLK','playSTL')
-                         } else {
-                         c('gmDate', 'playPTS', 'playTRB', 
-                           'playAST','playBLK','playSTL', 
-                           stats[stats$statistic == input$stat,1])}], 
-              rownames=FALSE) %>%
-        formatStyle(stats[stats$statistic == input$stat,1],
+                      c('gmDate', 'playPTS', 'playTRB', 
+                        'playAST','playBLK','playSTL')
+                    } else {
+                      c('gmDate', 'playPTS', 'playTRB', 
+                        'playAST','playBLK','playSTL', 
+                        stats[stats$statistic == input$stat,1])}]
+    
+    colnames(x) <- if(stats[stats$statistic == input$stat,1] %in%
+                      c('gmDate', 'playPTS', 'playTRB', 
+                        'playAST','playBLK','playSTL')){
+      c('Date', 'Points', 'Rebounds',
+        'Assists','Blocks','Steals')
+    } else {
+      c('Date', 'Points', 'Rebounds',
+        'Assists','Blocks','Steals',
+        stats[stats$statistic == input$stat,2])} 
+    
+    datatable(x,rownames=FALSE) %>%
+        formatStyle(stats[stats$statistic == input$stat,2],
                     background="skyblue", 
                     fontWeight='bold')
     })
@@ -66,7 +80,9 @@ shinyServer(
     })
     
     output$maxBox2 <- renderInfoBox({
-      max_value <- max(box_scores[box_scores$playDispNm == input$player,stats[stats$statistic == input$stat,1]]) 
+      max_value <- max(box_scores[box_scores$playDispNm == 
+                                    input$player,stats[stats$statistic == 
+                                                         input$stat,1]]) 
       infoBox(paste(input$player, 'max', input$stat), 
               max_value, icon = icon("hand-o-up"))
     })
@@ -165,7 +181,10 @@ shinyServer(
           stats[stats$statistic == input$stat,1]], 
         box_scores[
           box_scores$playDispNm == input$player,
-          stats[stats$statistic == input$stat2,1]]),
+          stats[stats$statistic == input$stat2,1]],
+        hover.html.tooltip = as.character(box_scores[
+          box_scores$playDispNm == input$player,
+          'hover.html.tooltip'])),
         options=list(
           title=paste(input$stat, 'vs', input$stat2),
           legend="none",
@@ -209,7 +228,8 @@ shinyServer(
                    & box_scores$gmDate >= input$daterange[1]
                    & box_scores$gmDate <= input$daterange[2],]
                           [, stats[stats$statistic == input$stat,1]]),
-        options = list(title = 'All Games',
+        options = list(title = paste('Games between', input$daterange[1],
+                                     'and', input$daterange[2]),
                        width = 'auto', height = 250,
                        legend = 'none',
                        hAxis = paste0("{title:'",input$stat,"'}"),
