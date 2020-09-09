@@ -47,7 +47,8 @@ stats %<>% data.frame(stat = stats, statistic = c('Minutes',
   .[-1]
 
 #make officials vector
-officials = unique(data.frame(Names = c(paste(box_scores$offFNm1, box_scores$offLNm1),
+officials = unique(data.frame(Names = c(paste(box_scores$offFNm1, 
+                                              box_scores$offLNm1),
          paste(box_scores$offFNm2, box_scores$offLNm2),
          paste(box_scores$offFNm3, box_scores$offLNm3)))) %>%
   mutate(Lname = gsub('^.*\\s','',.$Names)) %>%

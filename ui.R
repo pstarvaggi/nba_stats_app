@@ -41,7 +41,7 @@ shinyUI(
                              height = 'auto'))),
         tabItem(tabName = "official",
                 selectizeInput(inputId = 'ref',
-                               label = 'y-Axis Statistic',
+                               label = 'Referee',
                                choices = officials,
                                selected = 'Tony Brothers'),
                 fluidRow(box(htmlOutput('byref'),
@@ -53,7 +53,9 @@ shinyUI(
                 fluidRow(infoBoxOutput('avgBox3', width = 6),
                          infoBoxOutput('avgBox4', width = 6)),
                 fluidRow(infoBoxOutput('medBox1', width = 6),
-                         infoBoxOutput('medBox2', width = 6))
+                         infoBoxOutput('medBox2', width = 6)),
+                fluidRow(infoBoxOutput('winloss_byref', width = 'auto')),
+                fluidRow(infoBoxOutput('winloss', width = 'auto'))
                 ),
         tabItem(tabName = "bydate",
                 dateRangeInput("daterange", "Date range:",
