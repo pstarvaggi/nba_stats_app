@@ -1,0 +1,12 @@
+name: nba_stats_app
+title: nba_stats_app
+username:
+account: pstarvaggi
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2778444
+bundleId: 3612036
+url: https://pstarvaggi.shinyapps.io/nba_stats_app/
+when: 1599678748.61593
+asMultiple: FALSE
+asStatic: FALSE

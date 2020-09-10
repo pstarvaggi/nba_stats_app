@@ -11,7 +11,7 @@ shinyUI(
         menuItem("By Official", tabName = "official", icon = icon('asterisk')),
         menuItem("Date Range", tabName = 'bydate', icon = icon('calendar-alt')),
         menuItem("Data", tabName = "data", icon = icon("database"))
-        ),
+      ),
       selectizeInput(inputId = 'player', 
                      label = 'Player',
                      choices = players,
